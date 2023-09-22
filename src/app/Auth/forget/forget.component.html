@@ -1,0 +1,22 @@
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <div class="card">
+                <div class="card-body">
+                    <form #forgetForm="ngForm" (ngSubmit)="forgetPassword(forgetForm)">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="email" name="email" ngModel>
+                        </div>
+                        <div class="mb-3 text-center">
+                            <button type="submit" class="btn btn-primary w-100">Send Reset Link</button>
+                        </div>
+                        <div class="mb-3 form-check text-center">
+                            <p>Don’t have an account? <a routerLink="/register">Sign up</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

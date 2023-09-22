@@ -1,0 +1,9 @@
+{
+  "hosting": [
+    {
+      "target": "Book-Listing-CRUD",
+      "source": ".",
+      "frameworksBackend": {}
+    }
+  ]
+}

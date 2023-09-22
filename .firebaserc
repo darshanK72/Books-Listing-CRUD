@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "booklistingcrud": {
+      "hosting": {
+        "Book-Listing-CRUD": [
+          "booklistingcrud"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "booklistingcrud"
+  }
+}
