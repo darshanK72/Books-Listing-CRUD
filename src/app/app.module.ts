@@ -14,7 +14,11 @@ import { DashboardComponent } from './Components/dashboard/dashboard.component';
 import { environment } from '../environments/environment';
 import { ForgetComponent } from './Auth/forget/forget.component';
 import { ToastrModule } from 'ngx-toastr'
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NotfoundComponent } from './Layout/notfound/notfound.component';
+import { AdminDashboardComponent } from './Components/admin-dashboard/admin-dashboard.component';
+import { BookCardComponent } from './Components/book-card/book-card.component';
+import { BookDetailComponent } from './Components/book-detail/book-detail.component'
 
 @NgModule({
   declarations: [
@@ -25,7 +29,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
     HeaderComponent,
     FooterComponent,
     DashboardComponent,
-    ForgetComponent
+    ForgetComponent,
+    NotfoundComponent,
+    AdminDashboardComponent,
+    BookCardComponent,
+    BookDetailComponent
   ],
   imports: [
     BrowserModule,

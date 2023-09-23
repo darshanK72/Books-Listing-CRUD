@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { BookService } from 'src/app/Services/book.service';
+import { AuthService } from 'src/app/Services/auth.service';
 
 @Component({
   selector: 'app-logout',
@@ -9,10 +9,10 @@ import { BookService } from 'src/app/Services/book.service';
 })
 export class LogoutComponent {
 
-  constructor(private bookService:BookService,private router:Router){}
+  constructor(private authService:AuthService,private router:Router){}
 
   logout(){
-    this.bookService.logoutUser()
+    this.authService.logoutUser()
   }
 
   cancle(){

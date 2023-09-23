@@ -1,3 +1,9 @@
 <div class="container">
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem, reiciendis.</p>
+    <div class="row">
+        <ng-container *ngFor="let book of bookList">
+            <div class="col-3">
+                <app-book-card [book]="book"></app-book-card>
+            </div>
+        </ng-container>
+    </div>
 </div>

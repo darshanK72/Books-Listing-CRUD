@@ -1,6 +1,7 @@
-.container{
+.container .row{
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 84vh;
+    flex-wrap: wrap;
+    margin-top: 25px;
 }

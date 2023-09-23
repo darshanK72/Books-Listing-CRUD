@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { BookService } from 'src/app/Services/book.service';
+import { AuthService } from 'src/app/Services/auth.service';
 
 @Component({
   selector: 'app-forget',
@@ -11,10 +11,10 @@ export class ForgetComponent {
 
   email!: string;
   
-  constructor(private bookService:BookService) {}
+  constructor(private authService:AuthService) {}
 
   forgetPassword(forgetForm:NgForm){
     this.email = forgetForm.value.email;
-    this.bookService.forgetPassword(this.email);
+    this.authService.forgetPassword(this.email);
   }
 }

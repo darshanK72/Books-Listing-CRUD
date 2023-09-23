@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { BookService } from 'src/app/Services/book.service';
+import { AuthService } from 'src/app/Services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -12,10 +12,10 @@ export class HeaderComponent implements OnInit{
    isLoggedIn$!: Observable<boolean>;
    userData$!:Observable<any>;
 
-  constructor(private bookService:BookService){}
+  constructor(private authService:AuthService){}
 
   ngOnInit(): void {
-   this.isLoggedIn$ = this.bookService.isLoggedIn;
-   this.userData$ = this.bookService.getLoggedInUser;
+   this.isLoggedIn$ = this.authService.isLoggedIn;
+   this.userData$ = this.authService.getLoggedInUser;
   }
 }

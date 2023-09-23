@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { BookService } from 'src/app/Services/book.service';
-
+import { AuthService } from 'src/app/Services/auth.service';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -9,15 +8,15 @@ import { BookService } from 'src/app/Services/book.service';
 })
 export class RegisterComponent {
 
-  constructor(private bookService:BookService){}
+  constructor(private authService:AuthService){}
   
   registerUser(registerForm:NgForm){
     console.log(registerForm);
     let user = registerForm.value;
-    this.bookService.registerUser(user);
+    this.authService.registerUser(user);
   }
 
   loginWithGoogle(){
-    this.bookService.googleSingIn();
+    this.authService.googleSingIn();
   }
 }
