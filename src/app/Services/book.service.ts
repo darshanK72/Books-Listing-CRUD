@@ -1,6 +1,6 @@
 import { Injectable} from '@angular/core';
-import { doc, Firestore, getDoc, setDoc } from '@angular/fire/firestore';
-import { getStorage, Storage } from '@angular/fire/storage';
+import { doc, Firestore, getDoc, setDoc } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 import { Router } from '@angular/router';
 import { User } from '../Models/user';
 import {
@@ -12,23 +12,24 @@ import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
-} from '@angular/fire/auth';
+} from 'firebase/auth';
+import { FirebaseApp, initializeApp} from 'firebase/app';
 import { BehaviorSubject} from 'rxjs';
 import { getFirestore } from 'firebase/firestore';
-import { FirebaseApp } from '@angular/fire/app';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BookService {
-
+  app:FirebaseApp;
   auth: Auth;
   firestore: Firestore;
-  storage: Storage;
+  storage:any;
 
   private loggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.hasToken());
-  private loggedInUser: BehaviorSubject<any> = new BehaviorSubject<any>(this.getUserDetails);
+  private loggedInUser: BehaviorSubject<any> = new BehaviorSubject<any>(this.getUserDetails());
 
   get isLoggedIn() {
     return this.loggedIn.asObservable();
@@ -38,7 +39,8 @@ export class BookService {
     return this.loggedInUser.asObservable();
   }
 
-  constructor(private router: Router,private app: FirebaseApp,private toast: ToastrService) {
+  constructor(private router: Router,private toast: ToastrService) {
+    this.app = initializeApp(environment.firebase);
     this.auth = getAuth(this.app);
     this.firestore = getFirestore(this.app);
     this.storage = getStorage(this.app);
@@ -53,6 +55,7 @@ export class BookService {
     if (userData) {
       return JSON.parse(userData);
     }
+    return null;
   }
 
   loginUser(email: string, password: string) {
