@@ -1,9 +1,9 @@
-<div class="container">
-    <div class="row">
-        <ng-container *ngFor="let book of bookList">
-            <div class="col-3">
+<div class="container-fluid">
+    <div class="row py-4">
+        <div class="books-holder">
+            <ng-container *ngFor="let book of bookList">
                 <app-book-card [book]="book"></app-book-card>
-            </div>
-        </ng-container>
+            </ng-container>
+        </div>
     </div>
 </div>

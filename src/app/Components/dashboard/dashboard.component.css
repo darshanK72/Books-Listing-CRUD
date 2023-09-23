@@ -1,7 +1,9 @@
-.container .row{
+.books-holder{
     display: flex;
     justify-content: center;
-    align-items: center;
     flex-wrap: wrap;
-    margin-top: 25px;
+}
+
+.books-holder :last-child{
+    align-self:flex-start;
 }
