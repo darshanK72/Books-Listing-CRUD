@@ -26,7 +26,7 @@
               <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
             <div class="ms-4 name">
-                <h4>{{ (userName$ | async)}}</h4>
+                <h4>{{ (userData$ | async) ? (userData$ | async).firstName  + ' ' + (userData$ | async).lastName: '' }}</h4>
             </div>
           </div>
         </div>

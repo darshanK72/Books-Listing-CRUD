@@ -14,11 +14,10 @@ import { FooterComponent } from './Layout/footer/footer.component';
 import { DashboardComponent } from './Components/dashboard/dashboard.component';
 import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
 import { environment } from '../environments/environment';
-import { provideAuth,getAuth } from '@angular/fire/auth';
-import { provideFirestore,getFirestore } from '@angular/fire/firestore';
-import { provideStorage,getStorage } from '@angular/fire/storage';
-import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { ForgetComponent } from './Auth/forget/forget.component';
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,12 +36,11 @@ import { ForgetComponent } from './Auth/forget/forget.component';
     ReactiveFormsModule,
     FormsModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideAuth(() => getAuth()),
-    provideFirestore(() => getFirestore()),
-    provideStorage(() => getStorage())
+    ToastrModule.forRoot(),
+    BrowserAnimationsModule
   ],
   providers: [
-    { provide: FIREBASE_OPTIONS, useValue: environment.firebase}
+  
   ],
   bootstrap: [AppComponent]
 })

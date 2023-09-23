@@ -10,13 +10,12 @@ import { BookService } from 'src/app/Services/book.service';
 export class HeaderComponent implements OnInit{
 
    isLoggedIn$!: Observable<boolean>;
-   userName$!:Observable<string>;
+   userData$!:Observable<any>;
 
   constructor(private bookService:BookService){}
 
   ngOnInit(): void {
    this.isLoggedIn$ = this.bookService.isLoggedIn;
-   this.userName$ = this.bookService.getName;
+   this.userData$ = this.bookService.getLoggedInUser;
   }
-
 }

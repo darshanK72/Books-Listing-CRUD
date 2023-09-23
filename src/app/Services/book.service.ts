@@ -1,133 +1,143 @@
-import { inject, Injectable } from '@angular/core';
-import {
-  addDoc,
-  collection,
-  doc,
-  Firestore,
-  getDoc,
-  setDoc,
-} from '@angular/fire/firestore';
-import { Storage } from '@angular/fire/storage';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Injectable} from '@angular/core';
+import { doc, Firestore, getDoc, setDoc } from '@angular/fire/firestore';
+import { getStorage, Storage } from '@angular/fire/storage';
 import { Router } from '@angular/router';
 import { User } from '../Models/user';
-import { GoogleAuthProvider } from '@angular/fire/auth';
-import { BehaviorSubject, Observable } from 'rxjs';
+import {
+  Auth,
+  createUserWithEmailAndPassword,
+  getAuth,
+  GoogleAuthProvider,
+  sendEmailVerification,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from '@angular/fire/auth';
+import { BehaviorSubject} from 'rxjs';
+import { getFirestore } from 'firebase/firestore';
+import { FirebaseApp } from '@angular/fire/app';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BookService {
-  auth: AngularFireAuth = inject(AngularFireAuth);
 
-  private loggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
-    this.hasToken()
-  );
-  private userName: BehaviorSubject<string> = new BehaviorSubject<string>(
-    this.getUserName()
-  );
+  auth: Auth;
+  firestore: Firestore;
+  storage: Storage;
+
+  private loggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.hasToken());
+  private loggedInUser: BehaviorSubject<any> = new BehaviorSubject<any>(this.getUserDetails);
 
   get isLoggedIn() {
     return this.loggedIn.asObservable();
   }
 
-  get getName() {
-    return this.userName.asObservable();
+  get getLoggedInUser() {
+    return this.loggedInUser.asObservable();
   }
 
-  constructor(
-    private firestore: Firestore,
-    private storage: Storage,
-    private router: Router
-  ) {}
+  constructor(private router: Router,private app: FirebaseApp,private toast: ToastrService) {
+    this.auth = getAuth(this.app);
+    this.firestore = getFirestore(this.app);
+    this.storage = getStorage(this.app);
+  }
 
   hasToken(): boolean {
-    if (localStorage.getItem('token')) {
-      return true;
-    }
-    return false;
+    return localStorage.getItem('token') ? true:false;
   }
 
-  getUserName(): string {
-    if (this.hasToken()) {
-      let data = JSON.parse(localStorage.getItem('token') || ' ');
-      return data.user.displayName;
+  getUserDetails(): any {
+    let userData = localStorage.getItem('user');
+    if (userData) {
+      return JSON.parse(userData);
     }
-    return '';
   }
 
   loginUser(email: string, password: string) {
-    this.auth.signInWithEmailAndPassword(email, password).then(
+    signInWithEmailAndPassword(this.auth, email, password).then(
       async (data) => {
-        localStorage.setItem('token', JSON.stringify(data));
         if (data.user?.emailVerified) {
-          alert('Logged In Successfully');
-          console.log(data);
-
-          let user;
+          localStorage.setItem('token', JSON.stringify(data));
+          this.toast.success('Logged In Successfully', 'Success', {
+            timeOut: 3000,
+          });
           if (data.user?.uid) {
             let docRef = doc(this.firestore, 'users', data.user.uid);
             const docSnap = await getDoc(docRef);
-            user = docSnap.data() || {};
-            this.userName.next(user['firstName'] + ' ' + user['lastName']);
+
+            if (docSnap.exists()) {
+              this.loggedInUser.next(docSnap.data());
+              localStorage.setItem('user', JSON.stringify(docSnap.data()));
+            }
           }
 
           this.loggedIn.next(true);
           this.router.navigate(['dashboard']);
+
         } else {
-          alert('Please Verify Your Email Id !!');
+          this.toast.info('Please Verify Your Email Id !!', 'Info', {
+            timeOut: 3000,
+          });
         }
       },
       (error) => {
-        alert('Error : ' + error.message);
+        this.toast.error(error.message, 'Error', { timeOut: 4000 });
       }
     );
   }
 
   googleSingIn() {
-    this.auth.signInWithPopup(new GoogleAuthProvider()).then(
+    signInWithPopup(this.auth, new GoogleAuthProvider()).then(
       async (data) => {
         localStorage.setItem('token', JSON.stringify(data));
-        alert('Logged In Successfully');
+        this.toast.success('Logged In Successfully', 'Success', {
+          timeOut: 3000,
+        });
         this.loggedIn.next(true);
-
-        let user;
         if (data.user?.uid) {
           let docRef = doc(this.firestore, 'users', data.user.uid);
           const docSnap = await getDoc(docRef);
-          user = docSnap.data() || {};
-          this.userName.next(user['firstName']+ ' ' + user['lastName']);
+          if (docSnap.exists()) {
+            this.loggedInUser.next(docSnap.data());
+            localStorage.setItem('user', JSON.stringify(docSnap.data()));
+          }
         }
 
         this.router.navigate(['dashboard']);
       },
       (error) => {
-        alert('Error : ' + error.message);
+        this.toast.error(error.message, 'Error', { timeOut: 4000 });
         this.router.navigate(['login']);
       }
     );
   }
 
   registerUser(user: User) {
-    this.auth.createUserWithEmailAndPassword(user.email, user.password).then(
+    createUserWithEmailAndPassword(this.auth, user.email, user.password).then(
       (data) => {
         if (data.user?.uid) {
           let docRef = doc(this.firestore, 'users', data.user.uid);
           setDoc(docRef, user).then(
             () => {
-              data.user?.sendEmailVerification().then(() => {
-                alert('Email verification is send to your email!!');
+              sendEmailVerification(data.user).then(() => {
+                this.toast.info(
+                  'Email verification is send to your email!!',
+                  'Info',
+                  { timeOut: 3000 }
+                );
                 this.router.navigate(['login']);
               });
             },
             (error) => {
-              alert(error.message);
+              this.toast.error(error.message, 'Error', { timeOut: 4000 });
             }
           );
         }
       },
       (error) => {
-        alert(error.message);
+        this.toast.error(error.message, 'Error', { timeOut: 4000 });
       }
     );
   }
@@ -137,22 +147,32 @@ export class BookService {
       () => {
         localStorage.clear();
         this.loggedIn.next(false);
-        this.userName.next('');
+        this.loggedInUser.next('');
         this.router.navigate(['login']);
+        this.toast.success('Logout Successfully!', 'Success', {
+          timeOut: 3000,
+        });
       },
       (error) => {
-        alert('Error : ' + error.message);
+        this.toast.error(error.message, 'Error', { timeOut: 4000 });
       }
     );
   }
 
-  forgetPassword(email:string){
-    this.auth.sendPasswordResetEmail(email).then(()=>{
-      alert("Password reset link is send to your email !!");
-      this.router.navigate(["login"]);
-    },err => {
-      alert(err.message);
-      this.router.navigate(["forget"]);
-    })
+  forgetPassword(email: string) {
+    sendPasswordResetEmail(this.auth, email).then(
+      () => {
+        this.toast.info(
+          'Email verification link is send to your email!!',
+          'Info',
+          { timeOut: 3000 }
+        );
+        this.router.navigate(['login']);
+      },
+      (err) => {
+        this.toast.error(err.message, 'Error', { timeOut: 4000 });
+        this.router.navigate(['forget']);
+      }
+    );
   }
 }

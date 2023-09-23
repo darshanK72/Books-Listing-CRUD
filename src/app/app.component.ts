@@ -11,19 +11,8 @@ import { BookService } from './Services/book.service';
 export class AppComponent implements OnInit{
   title = 'Book Listing CRUD';
 
-  user:User = {
-    firstName:"Darshan",
-    lastName:"Khairnar",
-    gender:"Male",
-    dateOfBirth:'2000-12-07',
-    address:'Anand Nagar, Malegaon, Soygaon',
-    email:"darshankhairnar72@gmail.com",
-    password:"darshan@123"
-  }
-
-  constructor(private bookService:BookService){}
+  constructor(){}
 
   ngOnInit():void{
-    // this.bookService.registerUser(this.user)
   }
 }
