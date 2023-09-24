@@ -38,8 +38,11 @@ export class BookService {
     return getDoc(docRef);
   }
 
-  postBook(book: Book) {
+  postBook(file:File,book: Book) {
     let collectionInstance = collection(this.firestore, 'books');
+    let url = this.uploadFile(file);
+    console.log(url);
+    book.imageLink = url;
     return addDoc(collectionInstance, Object(book));
   }
 
@@ -48,12 +51,13 @@ export class BookService {
     return updateDoc(docRef,Object(book));
   }
 
-  deleteBook(book:Book){
-    let docRef = doc(this.firestore,'books',book.bookId);
+  deleteBook(bookId:string){
+    let docRef = doc(this.firestore,'books',bookId);
     return deleteDoc(docRef);
   }
 
-  uploadFile(file:File,book:Book){
+  uploadFile(file:File){
+    let url = '';
     let storageRef = ref(this.storage, file.name);
     let uploadRef = uploadBytesResumable(storageRef,file);
 
@@ -64,10 +68,10 @@ export class BookService {
         console.log(error);
       },() => {
         getDownloadURL(uploadRef.snapshot.ref).then((downloadURL) => {
-          book.imageLink = downloadURL;
-          this.postBook(book);
+          url = downloadURL;
         });
       });
+      return url;
   }
 
   async createFile(path: string, name: string, type: string): Promise<File> {

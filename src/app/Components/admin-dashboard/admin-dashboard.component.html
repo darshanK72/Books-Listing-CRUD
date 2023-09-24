@@ -1,1 +1,143 @@
-<p>admin-dashboard works!</p>
+<div>
+    <div class="student-table">
+        <h1 class="text-center">Admin Dashboard</h1>
+        <div class="total my-3">
+            <button class="btn btn-success insert-button" (click)="onInsertClicked()">
+                <i class="fa-solid fa-plus"></i> Add Book
+            </button>
+        </div>
+        <form class="bg-light" #myForm="ngForm" (ngSubmit)="onFormSubmit()">
+            <table>
+                <thead>
+                    <tr>
+                        <th>{{isInserting ? 'Book Image':'Book Id'}}</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Country</th>
+                        <th>Language</th>
+                        <th>Year</th>
+                        <th>Pages</th>
+                        <th>Link</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngIf="isInserting" ngModelGroup="insertDetails">
+                        <td>
+                            <label class="btn btn-primary" id="fileLabel" for="imageLink" #fileInputLabel>
+                                Select
+                            </label>
+                            <input type="file" id="imageLink" style="display:none;"
+                                (change)="onFileSelect($event)">
+                        </td>
+                        <td>
+                            <input type="text" name="title" ngModel placeholder="The King.." autofocus>
+                        </td>
+                        <td>
+                            <input type="text" name="author" ngModel placeholder="Jhon Doe">
+                        </td>
+                        <td>
+                            <input type="text" name="country" ngModel placeholder="India">
+                        </td>
+
+                        <td>
+                            <input type="text" name="language" ngModel placeholder="English">
+                        </td>
+                        <td>
+                            <input type="text" name="year" ngModel placeholder="2000" maxlength="4" minlength="4">
+                        </td>
+                        <td>
+                            <input type="number" name="pages" ngModel placeholder="200">
+                        </td>
+                        <td>
+                            <input type="url" name="link" ngModel placeholder="https://book.com">
+                        </td>
+                        <td class="button-td">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fa-solid fa-floppy-disk"></i>
+                            </button>
+                        </td>
+                        <td>
+                            <button (click)="onInsertCancle()" class="btn btn-danger">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <ng-container *ngFor="let book of bookList">
+                        <tr ngModelGroup="editDetails">
+                            <td *ngIf="!isEditing || book.bookId !== bookToEdit">{{book.id}}</td>
+                            <td *ngIf="isEditing && book.bookId === bookToEdit">
+                                <input type="text" name="id" ngModel readonly value="{{book.id}}">
+                            </td>
+                            <td *ngIf="!isEditing || book.bookId !== bookToEdit">{{book.title}}</td>
+                            <td *ngIf="isEditing && book.bookId === bookToEdit">
+                                <input type="text" name="title" ngModel autofocus>
+                            </td>
+
+                            <td *ngIf="!isEditing || book.bookId !== bookToEdit">{{book.author}}</td>
+                            <td *ngIf="isEditing && book.bookId === bookToEdit">
+                                <input type="text" name="author" ngModel>
+                            </td>
+
+                            <td *ngIf="!isEditing || book.bookId !== bookToEdit">{{book.country}}</td>
+                            <td *ngIf="isEditing && book.bookId === bookToEdit">
+                                <input type="text" name="country" ngModel>
+                            </td>
+
+                            <td *ngIf="!isEditing || book.bookId !== bookToEdit">{{book.language}}</td>
+                            <td *ngIf="isEditing && book.bookId === bookToEdit">
+                                <input type="text" name="language" ngModel>
+                            </td>
+
+
+                            <td *ngIf="!isEditing || book.bookId !== bookToEdit">{{book.year > 0 ? book.year + ' AC' :
+                                Math.abs(book.year) + ' BC'}}</td>
+                            <td *ngIf="isEditing && book.bookId === bookToEdit">
+                                <input type="text" name="year" ngModel>
+                            </td>
+
+                            <td *ngIf="!isEditing || book.bookId !== bookToEdit">{{book.pages}}</td>
+                            <td *ngIf="isEditing && book.bookId === bookToEdit">
+                                <input type="number" name="pages" ngModel>
+                            </td>
+
+                            <td *ngIf="!isEditing || book.bookId !== bookToEdit">
+                                <a class="btn btn-primary" [href]="book.link" target="_blank">
+                                    <i class="fa-brands fa-wikipedia-w"></i>
+                                </a>
+                            </td>
+                            <td *ngIf="isEditing && book.bookId === bookToEdit">
+                                <input type="string" name="link" ngModel>
+                            </td>
+
+                            <td *ngIf="!isEditing || book.bookId !== bookToEdit">
+                                <button class="btn btn-warning" (click)="onEditClicked(book.bookId)">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                            </td>
+
+                            <td *ngIf="!isEditing || book.bookId !== bookToEdit">
+                                <button class="btn btn-danger" (click)="onClickDelete(book.bookId)">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </td>
+
+                            <td *ngIf="isEditing && book.bookId === bookToEdit" class="button-td">
+                                <button type="submit" class="btn btn-warning">
+                                    <i class="fa-solid fa-floppy-disk"></i>
+                                </button>
+                            </td>
+
+                            <td *ngIf="isEditing && book.bookId === bookToEdit" class="button-td">
+                                <button class="btn btn-danger" (click)="onEditCancled()">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </table>
+        </form>
+    </div>
+</div>

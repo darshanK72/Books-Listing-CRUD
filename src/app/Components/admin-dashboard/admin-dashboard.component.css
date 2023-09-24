@@ -1,0 +1,26 @@
+.student-table{
+    margin: 30px;
+}
+
+table,tr,td,th{
+    border: 2px solid rgb(200, 200, 200);
+}
+table{
+    width: 100%;
+}
+
+tr,td,th{
+    min-width: 100px;
+    padding: 5px 10px 5px 10px;
+}
+
+tr td{
+    white-space:wrap;
+}
+
+input{
+    width: 100%;
+    outline: none;
+    /* border: none; */
+}
+
