@@ -1,6 +1,6 @@
 # BookListingCRUD
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.0.4.
+This project is CRUD application made using Angular and Firebase.
 
 ## Development server
 
